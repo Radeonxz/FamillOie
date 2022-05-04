@@ -4,6 +4,7 @@ import db from "../db/mongodb.ts";
 
 interface UserSchema {
   _id: Bson.ObjectId;
+  userId: string;
   username: string;
   email: string;
   password: string;
