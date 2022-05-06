@@ -1,4 +1,4 @@
-import { TaskModel } from "../models/model.ts";
+import { TaskModel } from "../models/models.ts";
 
 const createTask = async (taskObj: any) => {
   const taskId = crypto.randomUUID();

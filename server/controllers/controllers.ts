@@ -1,4 +1,4 @@
-export * from "./category.controller";
+export * from "./category.controller.ts";
 export * from "./home.controller.ts";
-export * from "./task.controller";
+export * from "./task.controller.ts";
 export * from "./user.controller.ts";

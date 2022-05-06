@@ -1,4 +1,4 @@
-import { CategoryModel } from "../models/model.ts";
+import { CategoryModel } from "../models/models.ts";
 
 const createCategory = async (categoryObj: any) => {
   const categoryId = crypto.randomUUID();

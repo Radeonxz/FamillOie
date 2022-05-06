@@ -1,4 +1,4 @@
-import { HomeModel } from "../models/model.ts";
+import { HomeModel } from "../models/models.ts";
 
 const createHome = async (homeObj: any) => {
   const homeId = crypto.randomUUID();
