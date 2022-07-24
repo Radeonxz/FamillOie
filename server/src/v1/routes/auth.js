@@ -9,13 +9,13 @@ router.post(
   "/signup",
   body("username")
     .isLength({ min: 8 })
-    .withMessage("username must be at least 8 characters"),
+    .withMessage("Username must be at least 8 characters"),
   body("password")
     .isLength({ min: 8 })
-    .withMessage("password must be at least 8 characters"),
+    .withMessage("Password must be at least 8 characters"),
   body("confirmPassword")
     .isLength({ min: 8 })
-    .withMessage("confirmPassword must be at least 8 characters"),
+    .withMessage("Confirm password must be at least 8 characters"),
   body("username").custom((value) => {
     return User.findOne({ username: value }).then((user) => {
       if (user) {
@@ -39,7 +39,7 @@ router.post(
   userController.login
 );
 
-router.post("/verify-token", tokenHandler.verification, (req, res) => {
+router.post("/verify-token", tokenHandler.verifyToken, (req, res) => {
   res.status(200).json({ user: req.user });
 });
 

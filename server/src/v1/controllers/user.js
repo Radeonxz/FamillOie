@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
     const token = jsonwebtoken.sign(
       { id: user._id },
       process.env.TOKEN_SECRET_KEY,
-      { expiration: "24h" }
+      { expiresIn: "24h" }
     );
     res.status(200).json({ user, token });
   } catch (err) {
@@ -58,7 +58,7 @@ exports.login = async (req, res) => {
     const token = jsonwebtoken.sign(
       { id: user._id },
       process.env.TOKEN_SECRET_KEY,
-      { expiration: "24h" }
+      { expiresIn: "24h" }
     );
 
     res.status(201).json({ user, token });

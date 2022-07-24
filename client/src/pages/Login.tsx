@@ -1,12 +1,59 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { SetStateAction, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Box, TextField, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
+import authApi from "../apis/authApi";
 
-  const handleSubmit = () => {};
+const Login = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [usernameErrText, setUsernameErrText] = useState("");
+  const [passwordErrText, setPasswordErrText] = useState("");
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setUsernameErrText("");
+    setPasswordErrText("");
+
+    const data: any = new FormData(e.target);
+
+    let err = false;
+    const errMsg = "Please fill this field";
+
+    const username = data.get("username").trim();
+    if (username === "") {
+      err = true;
+      setUsernameErrText(errMsg);
+    }
+
+    const password = data.get("password").trim();
+    if (password === "") {
+      err = true;
+      setPasswordErrText(errMsg);
+    }
+
+    if (err) return;
+
+    setIsLoading(true);
+
+    try {
+      const res: any = await authApi.login({
+        username,
+        password
+      });
+      setIsLoading(false);
+      localStorage.setItem("token", res.token);
+      navigate("/");
+    } catch (err: any) {
+      const errors = err.data.errors;
+      errors.forEach((e: { param: string; msg: SetStateAction<string> }) => {
+        if (e.param === "username") setUsernameErrText(e.msg);
+        if (e.param === "password") setPasswordErrText(e.msg);
+      });
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -19,6 +66,8 @@ const Login = () => {
           label="Username"
           name="username"
           disabled={isLoading}
+          error={usernameErrText !== ""}
+          helperText={usernameErrText}
         />
         <TextField
           margin="normal"
@@ -29,6 +78,8 @@ const Login = () => {
           name="password"
           type="password"
           disabled={isLoading}
+          error={passwordErrText !== ""}
+          helperText={passwordErrText}
         />
         <LoadingButton
           sx={{ mt: 3, mb: 2 }}
