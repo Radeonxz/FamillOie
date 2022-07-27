@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,11 +13,27 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 
 import assets from "../../assets";
+import boardApi from "../../apis/boardApi";
+import { setBoards } from "../../redux/features/boardSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.value);
+  const boards = useSelector((state: any) => state.board.value);
   const sidebarWidth = 250;
+
+  useEffect(() => {
+    const getBoards = async () => {
+      try {
+        const res = await boardApi.getAll();
+        dispatch(setBoards(res));
+      } catch (err) {
+        alert(err);
+      }
+    };
+    getBoards();
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("token");
