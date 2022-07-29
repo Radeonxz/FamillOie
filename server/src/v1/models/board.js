@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { schemaOptions } = require("./modelOptions");
 
 const Schema = mongoose.Schema;
-const borderSchema = new Schema(
+const boardSchema = new Schema(
   {
     user: {
       type: Schema.ObjectId,
@@ -39,4 +39,4 @@ const borderSchema = new Schema(
   schemaOptions
 );
 
-module.exports = mongoose.model("Border", borderSchema);
+module.exports = mongoose.model("Board", boardSchema);

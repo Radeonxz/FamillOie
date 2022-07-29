@@ -92,7 +92,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.getFavourites = async (req, res) => {
+exports.getFavorites = async (req, res) => {
   try {
     const favourites = await Board.find({
       user: req.user._id,
@@ -104,7 +104,7 @@ exports.getFavourites = async (req, res) => {
   }
 };
 
-exports.updateFavouritePosition = async (req, res) => {
+exports.updateFavoritePosition = async (req, res) => {
   const { boards } = req.body;
   try {
     for (const key in boards.reverse()) {

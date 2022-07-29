@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   Drawer,
   List,
   ListItem,
   Box,
   Typography,
-  IconButton
+  IconButton,
+  ListItemButton
 } from "@mui/material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
@@ -19,26 +21,43 @@ import { setBoards } from "../../redux/features/boardSlice";
 const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { boardId } = useParams();
+
   const user = useSelector((state: any) => state.user.value);
   const boards = useSelector((state: any) => state.board.value);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const sidebarWidth = 250;
 
   useEffect(() => {
     const getBoards = async () => {
       try {
-        const res = await boardApi.getAll();
+        const res: any = await boardApi.getAll();
         dispatch(setBoards(res));
       } catch (err) {
         alert(err);
       }
     };
     getBoards();
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    const activeItem = boards.length
+      ? boards.findIndex((e: any) => e.id === boardId)
+      : -1;
+    if (boards.length > 0 && boardId === undefined) {
+      navigate(`/boards/${boards[0].id}`);
+    }
+    setActiveIndex(activeItem);
+  }, [boards, boardId, navigate]);
 
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
+
+  const onDragEnd = () => {};
 
   return (
     <Drawer
@@ -111,6 +130,56 @@ const Sidebar = () => {
             </IconButton>
           </Box>
         </ListItem>
+
+        {boards.length && (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable
+              key="list-board-droppable"
+              droppableId="list-board-droppable"
+            >
+              {(provided: any) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {boards.map((item: any, index: number) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided: any, snapshot: any) => (
+                        <ListItemButton
+                          ref={provided.innerRef}
+                          {...provided.dragHandleProps}
+                          {...provided.draggableProps}
+                          selected={index === activeIndex}
+                          component={Link}
+                          to={`/boards/${item.id}`}
+                          sx={{
+                            pl: "20px",
+                            cursor: snapshot.isDragging
+                              ? "grab"
+                              : "pointer!important"
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            fontWeight="700"
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis"
+                            }}
+                          >
+                            {item.icon} {item.title}
+                          </Typography>
+                        </ListItemButton>
+                      )}
+                    </Draggable>
+                  ))}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        )}
       </List>
     </Drawer>
   );
