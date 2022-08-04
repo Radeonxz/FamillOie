@@ -73,6 +73,17 @@ const Sidebar = () => {
     }
   };
 
+  const addBoard = async () => {
+    try {
+      const res: any = await boardApi.create();
+      const newList = [res, ...boards];
+      dispatch(setBoards(newList));
+      navigate(`/boards/${res.id}`);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   return (
     <Drawer
       container={window.document.body}
@@ -139,7 +150,7 @@ const Sidebar = () => {
             <Typography variant="body2" fontWeight="700">
               Privates
             </Typography>
-            <IconButton>
+            <IconButton onClick={addBoard}>
               <AddBoxOutlinedIcon fontSize="small" />
             </IconButton>
           </Box>
