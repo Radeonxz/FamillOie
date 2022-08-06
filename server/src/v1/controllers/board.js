@@ -58,7 +58,7 @@ exports.getOne = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { boardId } = req.params;
-  const { title, description, favourite } = req.body;
+  const { title, description, favorite } = req.body;
 
   try {
     if (title === "") req.body.title = "Untitled";
@@ -66,20 +66,19 @@ exports.update = async (req, res) => {
     const currentBoard = await Board.findById(boardId);
     if (!currentBoard) return res.status(404).json("Board not found");
 
-    if (favourite !== undefined && currentBoard.favourite !== favourite) {
-      const favourites = await Board.find({
+    if (favorite !== undefined && currentBoard.favorite !== favorite) {
+      const favorites = await Board.find({
         user: currentBoard.user,
-        favourite: true,
+        favorite: true,
         _id: { $ne: boardId }
-      }).sort("favouritePosition");
-      if (favourite) {
-        req.body.favouritePosition =
-          favourites.length > 0 ? favourites.length : 0;
+      }).sort("favoritePosition");
+      if (favorite) {
+        req.body.favoritePosition = favorites.length > 0 ? favorites.length : 0;
       } else {
-        for (const key in favourites) {
-          const element = favourites[key];
+        for (const key in favorites) {
+          const element = favorites[key];
           await Board.findByIdAndUpdate(element.id, {
-            $set: { favouritePosition: key }
+            $set: { favoritePosition: key }
           });
         }
       }
@@ -94,11 +93,11 @@ exports.update = async (req, res) => {
 
 exports.getFavorites = async (req, res) => {
   try {
-    const favourites = await Board.find({
+    const favorites = await Board.find({
       user: req.user._id,
-      favourite: true
-    }).sort("-favouritePosition");
-    res.status(200).json(favourites);
+      favorite: true
+    }).sort("-favoritePosition");
+    res.status(200).json(favorites);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -110,7 +109,7 @@ exports.updateFavoritePosition = async (req, res) => {
     for (const key in boards.reverse()) {
       const board = boards[key];
       await Board.findByIdAndUpdate(board.id, {
-        $set: { favouritePosition: key }
+        $set: { favoritePosition: key }
       });
     }
     res.status(200).json("updated");
@@ -130,17 +129,17 @@ exports.delete = async (req, res) => {
 
     const currentBoard = await Board.findById(boardId);
 
-    if (currentBoard.favourite) {
-      const favourites = await Board.find({
+    if (currentBoard.favorite) {
+      const favorites = await Board.find({
         user: currentBoard.user,
-        favourite: true,
+        favorite: true,
         _id: { $ne: boardId }
-      }).sort("favouritePosition");
+      }).sort("favoritePosition");
 
-      for (const key in favourites) {
-        const element = favourites[key];
+      for (const key in favorites) {
+        const element = favorites[key];
         await Board.findByIdAndUpdate(element.id, {
-          $set: { favouritePosition: key }
+          $set: { favoritePosition: key }
         });
       }
     }
