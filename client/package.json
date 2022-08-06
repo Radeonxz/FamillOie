@@ -57,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@types/emoji-mart": "^3.0.9",
     "@types/react-beautiful-dnd": "^13.1.2"
   }
 }
