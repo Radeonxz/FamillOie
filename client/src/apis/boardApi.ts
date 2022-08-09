@@ -7,7 +7,8 @@ const boardApi = {
   getBoardById: (boardId: string | undefined) =>
     httpClient.get(`boards/${boardId}`),
   update: (boardId: string | undefined, params: any) =>
-    httpClient.put(`boards/${boardId}`, params)
+    httpClient.put(`boards/${boardId}`, params),
+  getFavorites: () => httpClient.get("boards/favorites")
 };
 
 export default boardApi;

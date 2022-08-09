@@ -17,6 +17,8 @@ import boardApi from "../apis/boardApi";
 import { setBoards } from "../redux/features/boardSlice";
 import EmojiPicker from "../components/common/EmojiPicker";
 
+let timer: any;
+const timeout = 5000;
 const Board = () => {
   const dispatch = useDispatch();
   const { boardId } = useParams();
@@ -35,7 +37,7 @@ const Board = () => {
         setTitle(res.title);
         setDescription(res.description);
         setSections(res.sections);
-        setIsFavorite(res.isFavorite);
+        setIsFavorite(res.favorite);
         setIcon(res.icon);
       } catch (err) {
         alert(err);
@@ -57,6 +59,53 @@ const Board = () => {
     }
   };
 
+  const updateTitle = async (e: any) => {
+    clearTimeout(timer);
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+
+    let temp = [...boards];
+    const index = temp.findIndex((e) => e.id === boardId);
+    temp[index] = { ...temp[index], title: newTitle };
+    dispatch(setBoards(temp));
+
+    timer = setTimeout(async () => {
+      try {
+        await boardApi.update(boardId, { title: newTitle });
+      } catch (err) {
+        alert(err);
+      }
+    }, timeout);
+  };
+
+  const updateDescription = async (e: any) => {
+    clearTimeout(timer);
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+
+    let temp = [...boards];
+    const index = temp.findIndex((e) => e.id === boardId);
+    temp[index] = { ...temp[index], description: newDescription };
+    dispatch(setBoards(temp));
+
+    timer = setTimeout(async () => {
+      try {
+        await boardApi.update(boardId, { description: newDescription });
+      } catch (err) {
+        alert(err);
+      }
+    }, timeout);
+  };
+
+  const updateFavorite = async () => {
+    try {
+      await boardApi.update(boardId, { favorite: !isFavorite });
+      setIsFavorite(!isFavorite);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   return (
     <>
       <Box
@@ -67,7 +116,7 @@ const Board = () => {
           width: "100%"
         }}
       >
-        <IconButton>
+        <IconButton onClick={updateFavorite}>
           {isFavorite ? (
             <StarOutlinedIcon color="warning" />
           ) : (
@@ -84,6 +133,7 @@ const Board = () => {
             <EmojiPicker icon={icon} onChange={onIconChange} />
             <TextField
               value={title}
+              onChange={updateTitle}
               placeholder="Untitled"
               variant="outlined"
               fullWidth
@@ -98,6 +148,7 @@ const Board = () => {
             />
             <TextField
               value={description}
+              onChange={updateDescription}
               placeholder="Add a description"
               variant="outlined"
               multiline
