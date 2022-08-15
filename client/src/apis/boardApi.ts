@@ -6,6 +6,8 @@ const boardApi = {
   updatePosition: (params: any) => httpClient.put("boards", params),
   getBoardById: (boardId: string | undefined) =>
     httpClient.get(`boards/${boardId}`),
+  deleteBoardById: (boardId: string | undefined) =>
+    httpClient.delete(`boards/${boardId}`),
   update: (boardId: string | undefined, params: any) =>
     httpClient.put(`boards/${boardId}`, params),
   getFavorites: () => httpClient.get("boards/favorites"),
