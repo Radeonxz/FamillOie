@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Box,
-  IconButton,
-  Button,
-  TextField,
-  Typography,
-  Divider
-} from "@mui/material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -16,6 +9,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import boardApi from "../apis/boardApi";
 import { setBoards } from "../redux/features/boardSlice";
 import { setFavoriteList } from "../redux/features/favoriteSlice";
+import Section from "../components/common/Section";
 import EmojiPicker from "../components/common/EmojiPicker";
 
 let timer: any;
@@ -218,19 +212,7 @@ const Board = () => {
           </Box>
         </Box>
         <Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignments: "center",
-              justifyContent: "space-between"
-            }}
-          >
-            <Button>Add a section</Button>
-            <Typography variant="body2" fontWeight="700">
-              {sections.length} Sections
-            </Typography>
-          </Box>
-          <Divider sx={{ margin: "10px" }} />
+          <Section data={sections} boardId={boardId} />
         </Box>
       </Box>
     </>
