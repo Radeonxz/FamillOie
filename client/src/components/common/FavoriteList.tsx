@@ -10,7 +10,7 @@ import { setFavoriteList } from "../../redux/features/favoriteSlice";
 const FavoriteList = () => {
   const dispatch = useDispatch();
   const list = useSelector((state: any) => state.favorites.value);
-  console.log("list: ", list);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const { boardId } = useParams();
 
