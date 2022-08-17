@@ -6,6 +6,7 @@ import CssBaseLine from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import "./styles/ScrollBar.css";
 import AppLayout from "./components/layouts/AppLayout";
 import AuthLayout from "./components/layouts/AuthLayout";
 import Home from "./pages/Home";
