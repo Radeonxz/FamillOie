@@ -1,20 +1,20 @@
-const router = require('express').Router({ mergeParams: true });
-const { param, body } = require('express-validator');
-const tokenHandler = require('../handlers/tokenHandler');
-const validation = require('../handlers/validation');
-const taskController = require('../controllers/task');
+const router = require("express").Router({ mergeParams: true });
+const { param, body } = require("express-validator");
+const tokenHandler = require("../handlers/tokenHandler");
+const validation = require("../handlers/validation");
+const taskController = require("../controllers/task");
 
 router.post(
-  '/',
-  param('boardId').custom(value => {
+  "/",
+  param("boardId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid board id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid board id");
+    } else return Promise.resolve();
   }),
-  body('sectionId').custom(value => {
+  body("sectionId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid section id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid section id");
+    } else return Promise.resolve();
   }),
   validation.validate,
   tokenHandler.verifyToken,
@@ -22,11 +22,11 @@ router.post(
 );
 
 router.put(
-  '/update-position',
-  param('boardId').custom(value => {
+  "/update-position",
+  param("boardId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid board id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid board id");
+    } else return Promise.resolve();
   }),
   validation.validate,
   tokenHandler.verifyToken,
@@ -34,16 +34,16 @@ router.put(
 );
 
 router.delete(
-  '/:taskId',
-  param('boardId').custom(value => {
+  "/:taskId",
+  param("boardId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid board id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid board id");
+    } else return Promise.resolve();
   }),
-  param('taskId').custom(value => {
+  param("taskId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid task id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid task id");
+    } else return Promise.resolve();
   }),
   validation.validate,
   tokenHandler.verifyToken,
@@ -51,16 +51,16 @@ router.delete(
 );
 
 router.put(
-  '/:taskId',
-  param('boardId').custom(value => {
+  "/:taskId",
+  param("boardId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid board id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid board id");
+    } else return Promise.resolve();
   }),
-  param('taskId').custom(value => {
+  param("taskId").custom((value) => {
     if (!validation.isObjectId(value)) {
-      return Promise.reject('invalid task id')
-    } else return Promise.resolve()
+      return Promise.reject("invalid task id");
+    } else return Promise.resolve();
   }),
   validation.validate,
   tokenHandler.verifyToken,

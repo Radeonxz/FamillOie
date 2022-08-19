@@ -1,5 +1,5 @@
-const Task = require('../models/task')
-const Section = require('../models/section')
+const Task = require("../models/task");
+const Section = require("../models/section");
 
 exports.create = async (req, res) => {
   const { sectionId } = req.body;
@@ -15,38 +15,34 @@ exports.create = async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 exports.update = async (req, res) => {
   const { taskId } = req.params;
   try {
-    const task = await Task.findByIdAndUpdate(
-      taskId,
-      { $set: req.body }
-    );
+    const task = await Task.findByIdAndUpdate(taskId, { $set: req.body });
     res.status(200).json(task);
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 exports.delete = async (req, res) => {
   const { taskId } = req.params;
   try {
     const currentTask = await Task.findById(taskId);
     await Task.deleteOne({ _id: taskId });
-    const tasks = await Task.find({ section: currentTask.section }).sort('postition');
+    const tasks = await Task.find({ section: currentTask.section }).sort(
+      "postition"
+    );
     for (const key in tasks) {
-      await Task.findByIdAndUpdate(
-        tasks[key].id,
-        { $set: { position: key } }
-      );
+      await Task.findByIdAndUpdate(tasks[key].id, { $set: { position: key } });
     }
-    res.status(200).json('deleted');
+    res.status(200).json("deleted");
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 exports.updatePosition = async (req, res) => {
   const {
@@ -54,36 +50,30 @@ exports.updatePosition = async (req, res) => {
     destinationList,
     resourceSectionId,
     destinationSectionId
-  } = req.body
+  } = req.body;
   const resourceListReverse = resourceList.reverse();
   const destinationListReverse = destinationList.reverse();
   try {
     if (resourceSectionId !== destinationSectionId) {
       for (const key in resourceListReverse) {
-        await Task.findByIdAndUpdate(
-          resourceListReverse[key].id,
-          {
-            $set: {
-              section: resourceSectionId,
-              position: key
-            }
+        await Task.findByIdAndUpdate(resourceListReverse[key].id, {
+          $set: {
+            section: resourceSectionId,
+            position: key
           }
-        );
+        });
       }
     }
     for (const key in destinationListReverse) {
-      await Task.findByIdAndUpdate(
-        destinationListReverse[key].id,
-        {
-          $set: {
-            section: destinationSectionId,
-            position: key
-          }
+      await Task.findByIdAndUpdate(destinationListReverse[key].id, {
+        $set: {
+          section: destinationSectionId,
+          position: key
         }
-      );
+      });
     }
-    res.status(200).json('updated');
+    res.status(200).json("updated");
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};

@@ -48,10 +48,10 @@ const Section = ({ boardId, data }: any) => {
     clearTimeout(timer);
     const newTitle = e.target.value;
     const newSections = [...newData];
-    const index = newSections.findIndex(e => e.id === sectionId);
+    const index = newSections.findIndex((e) => e.id === sectionId);
     newSections[index].title = newTitle;
     setNewData(newSections);
-    timer = setTimeout(async() => {
+    timer = setTimeout(async () => {
       try {
         await sectionApi.update(boardId, sectionId, { title: newTitle });
       } catch (err) {
@@ -70,7 +70,7 @@ const Section = ({ boardId, data }: any) => {
     } catch (err) {
       alert(err);
     }
-  }
+  };
 
   const onDragEnd = () => {};
 
@@ -153,19 +153,32 @@ const Section = ({ boardId, data }: any) => {
                         <DeleteOutlinedIcon />
                       </IconButton>
                     </Box>
-                    {
-                      section.tasks.map((task: any, index: number) =>(
-                        <Draggable key={task.id} draggableId={task.id} index={index}>
-                          {(provided, snapshot) => (
-                            <Card ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} sx={{padding: '10px', marginBottom: '10px', cursor: snapshot.isDragging ? 'grab' : 'pointer!important'}}>
+                    {section.tasks.map((task: any, index: number) => (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            sx={{
+                              padding: "10px",
+                              marginBottom: "10px",
+                              cursor: snapshot.isDragging
+                                ? "grab"
+                                : "pointer!important"
+                            }}
+                          >
                             <Typography>
-                              {task.title === '' ? 'Untitled' : task.title}
+                              {task.title === "" ? "Untitled" : task.title}
                             </Typography>
                           </Card>
-                          )}
-                        </Draggable>
-                      ))
-                    }
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
                   </Box>
                 )}
