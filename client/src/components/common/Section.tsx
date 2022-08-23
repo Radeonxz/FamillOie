@@ -14,12 +14,14 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 import sectionApi from "../../apis/sectionApi";
 import taskApi from "../../apis/taskApi";
+import TaskModal from "./TaskModal";
 
 let timer: any;
 const timeout = 500;
 
 const Section = ({ boardId, data }: any) => {
   const [newData, setNewData] = useState<any>([]);
+  const [selectedTask, setSelectedTask] = useState(undefined);
 
   useEffect(() => {
     setNewData(data);
@@ -72,7 +74,71 @@ const Section = ({ boardId, data }: any) => {
     }
   };
 
-  const onDragEnd = () => {};
+  const onDragEnd = async ({ source, destination }: any) => {
+    if (!destination) return;
+    const sourceColIndex = newData.findIndex(
+      (e: any) => e.id === source.droppableId
+    );
+    const destinationColIndex = newData.findIndex(
+      (e: any) => e.id === destination.droppableId
+    );
+
+    const sourceCol = newData[sourceColIndex];
+    const destinationCol = newData[destinationColIndex];
+
+    const sourceSectionId = sourceCol.id;
+    const destinationSectionId = destinationCol.id;
+
+    const sourceTasks = [...sourceCol.tasks];
+    const destinationTasks = [...destinationCol.tasks];
+
+    if (source.droppableId !== destinationCol.droppableId) {
+      const [removed] = sourceTasks.splice(source.index, 1);
+      destinationTasks.splice(destination.index, 0, removed);
+      newData[sourceColIndex].tasks = sourceTasks;
+      newData[destinationColIndex].tasks = destinationTasks;
+    } else {
+      const [removed] = destinationTasks.splice(source.index, 1);
+      destinationTasks.splice(destination.index, 0, removed);
+      newData[destinationColIndex].tasks = destinationTasks;
+    }
+
+    try {
+      await taskApi.updatePosition(boardId, {
+        resourceList: sourceTasks,
+        destinationList: destinationTasks,
+        resourceSectionId: sourceSectionId,
+        destinationSectionId
+      });
+      setNewData(newData);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const onUpdateTask = (task: any) => {
+    const newSections = [...newData];
+    const sectionIndex = newSections.findIndex(
+      (e: any) => e.id === task.section.id
+    );
+    const taskIndex = newSections[sectionIndex].tasks.findIndex(
+      (e: any) => e.id === task.id
+    );
+    newSections[sectionIndex].tasks[taskIndex] = task;
+    setNewData(newSections);
+  };
+
+  const onDeleteTask = (task: any) => {
+    const newSections = [...newData];
+    const sectionIndex = newSections.findIndex(
+      (e: any) => e.id === task.section.id
+    );
+    const taskIndex = newSections[sectionIndex].tasks.findIndex(
+      (e: any) => e.id === task.id
+    );
+    newSections[sectionIndex].tasks.splice(taskIndex, 1);
+    setNewData(newSections);
+  };
 
   return (
     <>
@@ -171,6 +237,7 @@ const Section = ({ boardId, data }: any) => {
                                 ? "grab"
                                 : "pointer!important"
                             }}
+                            onClick={() => setSelectedTask(task)}
                           >
                             <Typography>
                               {task.title === "" ? "Untitled" : task.title}
@@ -187,6 +254,13 @@ const Section = ({ boardId, data }: any) => {
           ))}
         </Box>
       </DragDropContext>
+      <TaskModal
+        selectedTask={selectedTask}
+        boardId={boardId}
+        onClose={() => setSelectedTask(undefined)}
+        onUpdate={onUpdateTask}
+        onDelete={onDeleteTask}
+      />
     </>
   );
 };
