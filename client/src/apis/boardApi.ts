@@ -1,5 +1,5 @@
 import httpClient from "./httpClient";
-import { Board } from "../types/Board.model";
+import { Board } from "../types/Board.models";
 
 const boardApi = {
   create: () => httpClient.post("boards"),

@@ -1,5 +1,5 @@
 import httpClient from "./httpClient";
-import { UserSignUpProps, UserLoginProps } from "../types/User.model";
+import { UserSignUpProps, UserLoginProps } from "../types/User.models";
 
 const authApi = {
   signup: (params: UserSignUpProps) => httpClient.post("auth/signup", params),
