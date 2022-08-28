@@ -5,8 +5,13 @@ export interface User {
   confirmPassword: string;
 }
 
-export interface UserSignUpProps extends User {
+export interface UserSignUpProps {
+  username: string;
+  password: string;
   confirmPassword: string;
 }
 
-export interface UserLoginProps extends User {}
+export interface UserLoginProps {
+  username: string;
+  password: string;
+}

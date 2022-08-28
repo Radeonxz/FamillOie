@@ -6,10 +6,11 @@ import { ListItem, Box, Typography, ListItemButton } from "@mui/material";
 
 import boardApi from "../../apis/boardApi";
 import { setFavoriteList } from "../../redux/features/favoriteSlice";
+import { Board } from "../../types/Board.models";
 
 const FavoriteList = () => {
   const dispatch = useDispatch();
-  const list = useSelector((state: any) => state.favorites.value);
+  const list: Board[] = useSelector((state: any) => state.favorites.value);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const { boardId } = useParams();

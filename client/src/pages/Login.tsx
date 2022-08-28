@@ -21,13 +21,13 @@ const Login = () => {
     let err = false;
     const errMsg = "Please fill this field";
 
-    const username = data.get("username").trim();
+    const username: string = data.get("username").trim();
     if (username === "") {
       err = true;
       setUsernameErrText(errMsg);
     }
 
-    const password = data.get("password").trim();
+    const password: string = data.get("password").trim();
     if (password === "") {
       err = true;
       setPasswordErrText(errMsg);
