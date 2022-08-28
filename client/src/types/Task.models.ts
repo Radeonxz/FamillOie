@@ -6,3 +6,19 @@ export interface Task {
   content: string;
   position: number;
 }
+
+export interface TaskCreateProps {
+  sectionId: string;
+}
+
+export interface TaskUpdateProps {
+  title?: string;
+  content?: string;
+}
+
+export interface TaskUpdatePositionProps {
+  resourceList: Task[];
+  destinationList: Task[];
+  resourceSectionId: string;
+  destinationSectionId: string;
+}
